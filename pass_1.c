@@ -163,6 +163,11 @@ int main()
     for (int j = 0; j < i; j++)
     {
         int valid = 0;
+        if(objects[j].opcode[0]=='.')
+        {
+            printf("This is comment line : %s\n",objects[j].opcode);
+            continue;
+        }
         for(int k=0;k<op_count;k++)
         {
 
