@@ -13,7 +13,7 @@ typedef struct op
 {
     char opcode[MAXSIZE];
     char opnum[MAXSIZE];
-}OPCODE;
+} OPCODE;
 
 typedef struct object
 {
@@ -37,9 +37,9 @@ void read_opcodes()
     {
         char tokens[2][20];
 
-       char *token = strtok(line, " ");
-      int j=0;
-      while (token != NULL)
+        char *token = strtok(line, " ");
+        int j = 0;
+        while (token != NULL)
         {
             strcpy(tokens[j], token);
             token = strtok(NULL, " ");
@@ -50,7 +50,6 @@ void read_opcodes()
         strcpy(opcodes[op_count].opcode, tokens[0]);
         strcpy(opcodes[op_count].opnum, tokens[1]);
         op_count++;
-
     }
     fclose(fp4);
 }
@@ -73,16 +72,16 @@ OBJ insert_tokens(char *s)
 {
     s[strcspn(s, "\n")] = 0;
     int spaces = count_spaces(s);
-    char *token = strtok(s," ");
+    char *token = strtok(s, " ");
     OBJ temp_obj;
     char tokens[3][20];
     strcpy(temp_obj.label, " ");
     strcpy(temp_obj.opcode, " ");
     strcpy(temp_obj.operand, " ");
 
-    if(spaces == 0)
+    if (spaces == 0)
     {
-        strcpy(temp_obj.opcode,s);
+        strcpy(temp_obj.opcode, s);
         return temp_obj;
     }
 
@@ -117,7 +116,6 @@ OBJ insert_tokens(char *s)
         strcpy(temp_obj.operand, tokens[2]);
         return temp_obj;
     }
-
 }
 int main()
 {
@@ -141,13 +139,13 @@ int main()
     OBJ temp;
     while (fgets(line, sizeof(line), fp))
     {
-            temp = insert_tokens(line);
-            objects[i] = temp;
-            i++;
+        temp = insert_tokens(line);
+        objects[i] = temp;
+        i++;
     }
     fclose(fp);
     FILE *fp2 = fopen("intermediate.txt", "w+");
-    FILE *fp4 = fopen("intermediate_temp.txt","w+");
+    FILE *fp4 = fopen("intermediate_temp.txt", "w+");
     FILE *fp3 = fopen("symtab.txt", "w+");
 
     if (fp2 == NULL)
@@ -163,36 +161,36 @@ int main()
     for (int j = 0; j < i; j++)
     {
         int valid = 0;
-        if(objects[j].opcode[0]=='.')
+        if (objects[j].opcode[0] == '.')
         {
-            printf("This is comment line : %s\n",objects[j].opcode);
+            printf("This is comment line : %s\n", objects[j].opcode);
             continue;
         }
-        for(int k=0;k<op_count;k++)
+        for (int k = 0; k < op_count; k++)
         {
 
-            if(strcmp(objects[j].opcode,opcodes[k].opcode)==0)
+            if (strcmp(objects[j].opcode, opcodes[k].opcode) == 0)
             {
                 valid = 1;
             }
         }
-        if(!strcmp("END",objects[j].opcode)||!strcmp("START",objects[j].opcode)||!strcmp("BYTE",objects[j].opcode)||!strcmp("WORD",objects[j].opcode)||!strcmp("RESW",objects[j].opcode)||!strcmp("RESB",objects[j].opcode))
+        if (!strcmp("END", objects[j].opcode) || !strcmp("START", objects[j].opcode) || !strcmp("BYTE", objects[j].opcode) || !strcmp("WORD", objects[j].opcode) || !strcmp("RESW", objects[j].opcode) || !strcmp("RESB", objects[j].opcode))
         {
             valid = 1;
         }
-        if(!valid)
+        if (!valid)
         {
-            printf("\nopcode %s is invalid at line %d\n\n",objects[j].opcode,line_count+1);
+            printf("\nopcode %s is invalid at line %d\n\n", objects[j].opcode, line_count + 1);
             continue;
         }
         if (!strcmp(objects[j].opcode, "START"))
         {
 
-            locctr = strtol(objects[j].operand, NULL,16);
+            locctr = strtol(objects[j].operand, NULL, 16);
             startingAddress = strtol(objects[j].operand, NULL, 16);
             {
-                fprintf(fp2, "%-10s %-10s %-10s %s\n",objects[j].operand,objects[j].label, objects[j].opcode, objects[j].operand);
-                fprintf(fp4, "%s %s %s %s\n",objects[j].operand,objects[j].label, objects[j].opcode, objects[j].operand);
+                fprintf(fp2, "%-10s %-10s %-10s %s\n", objects[j].operand, objects[j].label, objects[j].opcode, objects[j].operand);
+                fprintf(fp4, "%s %s %s %s\n", objects[j].operand, objects[j].label, objects[j].opcode, objects[j].operand);
                 printf("%-10s %-10s %-10s\n", objects[j].label, objects[j].opcode, objects[j].operand);
             }
         }
@@ -216,7 +214,7 @@ int main()
                 }
                 else
                 {
-                    fprintf(fp3, "%s %X\n",objects[j].label, locctr);
+                    fprintf(fp3, "%s %X\n", objects[j].label, locctr);
                     strcpy(labels[label_count], objects[j].label);
                     label_count++;
                 }
@@ -240,18 +238,17 @@ int main()
             }
             else if (!strcmp(objects[j].opcode, "BYTE"))
             {
-                if(objects[j].operand[0]=='X')
+                if (objects[j].operand[0] == 'X')
                 {
-                    locctr = locctr + ((strlen(objects[j].operand)-3)/2);
+                    locctr = locctr + ((strlen(objects[j].operand) - 3) / 2);
                 }
-                else if(objects[j].operand[0]=='C')
+                else if (objects[j].operand[0] == 'C')
                 {
-                    locctr = locctr + (strlen(objects[j].operand)-3);
+                    locctr = locctr + (strlen(objects[j].operand) - 3);
                 }
             }
-            else if(!strcmp(objects[j].opcode, "END"))
+            else if (!strcmp(objects[j].opcode, "END"))
             {
-
             }
             else
             {
@@ -262,7 +259,6 @@ int main()
     }
     fclose(fp3);
     fclose(fp2);
-    printf("\n\nLength of the program = %X\n\n",locctr-startingAddress);
+    printf("\n\nLength of the program = %X\n\n", locctr - startingAddress);
     return 0;
 }
-
