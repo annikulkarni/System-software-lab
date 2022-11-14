@@ -223,7 +223,7 @@ int main()
             fprintf(fp2, "%-10X %-10s %-10s %s\n", locctr, objects[j].label, objects[j].opcode, objects[j].operand);
             fprintf(fp4, "%X %s %s %s\n", locctr, objects[j].label, objects[j].opcode, objects[j].operand);
             printf("%-10s %-10s %-10s\n", objects[j].label, objects[j].opcode, objects[j].operand);
-
+            
             if (!strcmp(objects[j].opcode, "WORD"))
             {
                 locctr += 3;
