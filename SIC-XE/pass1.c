@@ -186,7 +186,7 @@ int main()
             locctr = strtol(temp.operand, NULL, 16);
             startingAddress = strtol(temp.operand, NULL, 16);
             {
-                fprintf(fp2, "%-10s %-10s %-10s %s\n", temp.operand, temp.label, temp.opcode, temp.operand);
+                fprintf(fp2, "%s %s %s %s\n", temp.operand, temp.label, temp.opcode, temp.operand);
                 printf("%-10s %-10s %-10s\n", temp.label, temp.opcode, temp.operand);
             }
         }
@@ -215,11 +215,11 @@ int main()
             }
             if (strcmp(temp.opcode, "BASE")==0)
             {
-              fprintf(fp2, "%-10s %-10s %-10s %s\n","", temp.label, temp.opcode, temp.operand);
-              printf("%-10s %-10s %-10s\n", temp.label, temp.opcode, temp.operand);
+              fprintf(fp2, "%X %s %s %s\n",locctr, temp.label, temp.opcode, temp.operand);
+              printf("%X %-10s %-10s %-10s\n",locctr, temp.label, temp.opcode, temp.operand);
               continue;
             }
-            fprintf(fp2, "%-10X %-10s %-10s %s\n", locctr, temp.label, temp.opcode, temp.operand);
+            fprintf(fp2, "%X %s %s %s\n", locctr, temp.label, temp.opcode, temp.operand);
             printf("%-10s %-10s %-10s\n", temp.label, temp.opcode, temp.operand);
             
             if(temp.opcode[0]=='+')
