@@ -315,35 +315,52 @@ int main()
                 strcpy(opcode,give_opnum(temp_instr.opcode));
                 strcat(object_code,opcode);
                 char reg_num;
-                if(temp_instr.opcode[1]==',')
+                if(temp_instr.operand[1]==',')
                 {
                     char reg_num1 = give_reg(temp_instr.operand[0]);
                     char reg_num2 = give_reg(temp_instr.operand[2]);
                     strncat(object_code,&reg_num1,1);
                     strncat(object_code,&reg_num2,1);
+                    printf("%s\n",object_code);
+                    fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+
                 }
-                reg_num = give_reg(temp_instr.operand[0]);
-                strncat(object_code,&reg_num,1);
-                char zero = '0';
-                strncat(object_code,&zero,1);
-                printf("%s\n",object_code);
-                fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                else{
+                        reg_num = give_reg(temp_instr.operand[0]);
+                        strncat(object_code,&reg_num,1);
+                        char zero = '0';
+                        strncat(object_code,&zero,1);
+                        printf("%s\n",object_code);
+                        fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+
+                }
+                
                 //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
             }
 
             else if(strcmp(temp_instr.operand," ")==0)
             {
+
                 strcat(object_code,give_opnum(temp_instr.opcode));
                 strcat(object_code,"0000");
                 printf("%s\n",object_code);
                 fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
                 //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
             }
-        }
+            else 
+            {
+                flag = 1;
+                fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+            }
+        
 
+
+        }
+           
 
     }
-    
+
+
 
   return 0;
 }

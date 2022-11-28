@@ -15,8 +15,11 @@
 102A       EOF        BYTE       C'EOF'     454F46    
 102D       THREE      WORD       3          000003
 1030       ZERO       WORD       0          000000
+here i am
 1033       RETADR     RESW       1         
+here i am
 1036       LENGTH     RESW       1         
+here i am
 1039       BUFFER     RESB       4096      
 2039       RDREC      LDX        ZERO       041030    
 203C                  LDA        ZERO       001030    
@@ -41,4 +44,5 @@
 2073                  JLT        WLOOP      382064    
 2076                  RSUB                  4C0000    
 2079       OUTPUT     BYTE       X'05'      05        
+here i am
 207A                  END        FIRST     

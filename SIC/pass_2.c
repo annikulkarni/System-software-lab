@@ -361,6 +361,7 @@ int main()
         else
         {
                 flag = 1;
+                fprintf(output,"here i am\n");
                 fprintf(output,"%-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand);
                 //printf("%-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand);
         }
@@ -415,7 +416,7 @@ int main()
                 }
                 strcat(object_program_temp,"^");
                 strcat(object_program_temp,object_code);
-                object_program_size+= strlen(object_code)/2;
+                object_program_size += strlen(object_code)/2;
                 flag2 = 0;
 
             }
