@@ -340,12 +340,20 @@ int main()
 
             else if(strcmp(temp_instr.operand," ")==0)
             {
-
-                strcat(object_code,give_opnum(temp_instr.opcode));
-                strcat(object_code,"0000");
-                printf("%s\n",object_code);
-                fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
-                //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                if(strcmp(temp_instr.opcode, "RSUB")==0) {
+                    strcpy(object_code,"4F0000");
+                    printf("%s\n",object_code);
+                    fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                    //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                }
+                else {
+                    strcpy(object_code,give_opnum(temp_instr.opcode));
+                    printf("%s\n",object_code);
+                    fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                    //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                }
+                
+                
             }
             else 
             {
