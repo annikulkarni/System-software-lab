@@ -1,9 +1,8 @@
 PROGA                 4000       0063      
            LISTA      4040                 
            ENDA       4054                 
-PROGB                 4063       2000      
+PROGB                 4063       0063      
            LISTB      40A3                 
            ENDB       40B7                 
-PROGC                 6063       3000      
-           LISTC      60A3                 
-           ENDC       60B7                 
+PROGC                 40C6       0063      
+           LISTC      4106                 

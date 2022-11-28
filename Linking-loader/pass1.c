@@ -32,8 +32,20 @@ int main()
     int curr_addr = (int)strtol(start, NULL, 16); 
     int addr = (int)strtol(start, NULL, 16); 
     int flag = 0;
+    int  duplicate_csname = 0;
     while (fgets(line, sizeof(line), fp1))
     {
+        if(duplicate_csname==1)
+        {
+            if(line[0]=='E')
+            {
+                duplicate_csname = 0;
+            }
+            else{
+                continue;
+            }
+        }
+
         line[strcspn(line, "\n")] = 0;
         if(strcmp(line, "END") == 0) {
             break;
@@ -52,8 +64,14 @@ int main()
             for(int k=0;k<csCount;k++) {
                 if(strcmp(tokens[1], csName[k]) == 0) {
                     printf("Duplicate CSNAME : %s\n", tokens[1]);
+                    duplicate_csname = 1;
                 }
             }
+            if(duplicate_csname == 1)
+            {
+                continue;
+            }
+
             if(flag == 1)
             {
                 curr_addr += (int)strtol(cur_length, NULL, 16);
