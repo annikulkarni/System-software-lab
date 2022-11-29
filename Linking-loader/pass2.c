@@ -77,7 +77,7 @@ char * search_estab(char *s)
             return mod_records[i].addr;
         }
     }
-    return 'undefined';
+    
 }
 void print_estab()
 {
@@ -101,7 +101,7 @@ int main()
     FILE *fp2;
 
     fp = fopen("input.txt", "r+");
-    fp2 = fopen("memory.txt", "w+");
+    fp2 = fopen("after_mod.txt", "w+");
 
     if (!fp)
     {
@@ -112,8 +112,12 @@ int main()
    
     int start = strtol(program_addr, NULL, 16);
     int progad = strtol(program_addr, NULL, 16);
-
-    for (int i = 0; i < 25; i++)
+    fprintf(fp2,"------------------------------------------------\n");
+    fprintf(fp2,"|      ** PASS 2 OF DIRECT LINKER LOADER **    |\n");
+    fprintf(fp2,"------------------------------------------------\n");
+    fprintf(fp2,"|Address                 Contents              |\n");
+    fprintf(fp2,"------------------------------------------------\n");
+    for (int i = 0; i < 50; i++)
     {
         fprintf(fp2, "%-10X********  ********  ********  ********\n", start); // 50 spaces
         start = start + 16;
@@ -180,7 +184,7 @@ int main()
             
             
            
-            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 , SEEK_SET);
+            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 + 250 , SEEK_SET);
             
             int count = 0;
 
@@ -237,7 +241,7 @@ int main()
             int offset = line_finder % 16;
             int temp_off = offset / 4;
 
-            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 , SEEK_SET);
+            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 + 250, SEEK_SET);
             int count = 0;
             
             for(int i=0;i<atoi(tokens[2]);i++)
@@ -267,11 +271,32 @@ int main()
             }
             char new_val_str[10];
             memset(new_val_str, 0, sizeof(new_val_str));
-
+            
             sprintf(new_val_str, "%X", new_val);
+            char temp_new_val_str [atoi(tokens[2])];
+            memset(temp_new_val_str, 0, sizeof(temp_new_val_str));
+            
+            
+            for(int i=0;i<atoi(tokens[2]);i++)
+            {
+                temp_new_val_str[i]='0';
+            }
+
+            temp_new_val_str[atoi(tokens[2])] = '\0'; 
+            
+            int k=0;
+            
+            for(int i=strlen(temp_new_val_str)-strlen(new_val_str);i<strlen(temp_new_val_str);i++)
+            {
+                temp_new_val_str[i] = new_val_str[k];
+                k++;
+            }
+            
+          
+        
             count = 0;
-            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 , SEEK_SET);
-            for (int i = 0; i < strlen(new_val_str); i++)
+            fseek(fp2, line*50 + (offset*2)+temp_off*2 + 10 + 250, SEEK_SET);
+            for (int i = 0; i < strlen(temp_new_val_str); i++)
             {
                 
                     if (count >= 30)
@@ -287,7 +312,7 @@ int main()
                         fseek(fp2,ftell(fp2) + 10, SEEK_SET);
                         printf("here it is : %d\n",ftell(fp2));
                     }
-                    fprintf(fp2, "%c", new_val_str[i]);
+                    fprintf(fp2, "%c", temp_new_val_str[i]);
                     count++;
             }
 
