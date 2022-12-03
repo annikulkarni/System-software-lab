@@ -58,6 +58,7 @@ int read_opcodes()
     }
     fclose(fp4);
 }
+
 int read_symtab()
 {
     FILE *fp;
@@ -89,6 +90,7 @@ int read_symtab()
     }
     fclose(fp);
 }
+
 int search_optab(char *s)
 {
     for(int i=0;i<op_count;i++)
@@ -100,6 +102,7 @@ int search_optab(char *s)
     }
     return 0;
 }
+
 char * search_symtab(char *s)
 {
       for(int i=0;i<sym_count;i++)
@@ -112,6 +115,7 @@ char * search_symtab(char *s)
       }
 
 }
+
 char *give_opnum(char *s)
 {
     for(int i=0;i<op_count;i++)
@@ -123,6 +127,7 @@ char *give_opnum(char *s)
 
       }
 }
+
 int count_spaces(char *s)
 {
     int i = 0;
@@ -137,6 +142,7 @@ int count_spaces(char *s)
     }
     return spaces;
 }
+
 INTR insert_instr(char *s)
 {
     s[strcspn(s, "\n")] = 0;
@@ -200,6 +206,7 @@ INTR insert_instr(char *s)
     }
 
 }
+
 int give_hex(char s)
 {
     if(s=='4')
@@ -271,15 +278,20 @@ int main()
 
     FILE * object_record;
     FILE * output;
-
     output = fopen("output.txt","w+");
-
     object_record = fopen("object_program.txt", "w+");
 
+    char starting_address[100];
+    char end_addr[100];
+    strcpy(starting_address, tokens[2]); 
+
+    // Write header record into object program
     fprintf(object_record,"H^  %s^  1000^  0000",tokens[1]);
     fprintf(object_record,"\n");
     printf("starting addr = %s\n",tokens[0]);
-    fprintf(object_record,"T^%6s",tokens[0]);
+
+    //Initialize first text record
+    fprintf(object_record,"T^ ");
 
     printf("program name  = %s\n",tokens[1]);
 
@@ -293,13 +305,21 @@ int main()
     int flag = 0;
     int flag2 = 0;
     char opcode[4];
-     memset(start_addr,0,sizeof(start_addr));
-     strcpy(program_start,tokens[0]);
+    memset(start_addr,0,sizeof(start_addr));
+    strcpy(program_start,tokens[0]);
+    INTR temp_instr;
+
+    // for text records
+    char text_record[200];
+    strcpy(text_record, "");
+    int text_length = 0;
+    char starting_text_addr[100] = "";
+    int empty = 0;
      while (fgets(line, sizeof(line), fp))
     {
         printf("%s\n",line);
         flag = 0;
-        INTR temp_instr = insert_instr(line);
+        temp_instr = insert_instr(line);
         char object_code[100] = "";
         
         //printf("%s %s %s %s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand);
@@ -344,13 +364,13 @@ int main()
                     strcpy(object_code,"4F0000");
                     printf("%s\n",object_code);
                     fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
-                    //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                    // printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
                 }
                 else {
                     strcpy(object_code,give_opnum(temp_instr.opcode));
                     printf("%s\n",object_code);
                     fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
-                    //printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
+                    // printf("%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
                 }
                 
                 
@@ -360,15 +380,30 @@ int main()
                 flag = 1;
                 fprintf(output,"%-10s %-10s %-10s %-10s %-10s\n",temp_instr.loc,temp_instr.label,temp_instr.opcode,temp_instr.operand,object_code);
             }
-        
-
-
         }
-           
-
+        if(empty == 1) {
+            fprintf(object_record, " %s^%2X%s",starting_address, text_length, text_record);
+            fprintf(object_record, "\nT^ ");
+            strcpy(starting_address, temp_instr.loc);
+            strcpy(text_record, "");
+            text_length = 0;
+        }
+        strcat(text_record, "^");
+        strcat(text_record, object_code);
+        text_length += strlen(object_code)/2;
+        empty = 0;
     }
+    
+    starting_address[strcspn(starting_address, "\n")] = 0;
+    fprintf(object_record, " %s^%2X%s\n",starting_address, text_length, text_record);
+    // Write the End record into objectprogram.txt
+    fprintf(object_record, "E^%6s\n",starting_address);
 
-
+    int start = strtol(starting_address, NULL, 16);
+    int end = strtol(temp_instr.loc, NULL, 16);
+    fseek(object_record, 0, SEEK_SET);
+    fseek(object_record, 18, SEEK_CUR);
+    fprintf(object_record, "%X", end - start);
 
   return 0;
 }
